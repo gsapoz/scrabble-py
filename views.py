@@ -5,12 +5,13 @@ views = Blueprint(__name__, "views")
 
 @views.route("/")
 def home():
-    return render_template("index.html", name="Scrabble")
+    letters = ['A', 'B', 'C', 'D', 'E']
+    return render_template('index.html', letters=letters, name="Scrabble!")
 
-@views.route('/letter')
+@views.route('/board')
 def board():
-    thisletter = 'X'
-    return render_template('letter.html', thisletter=thisletter)
+    letters = ['A', 'B', 'C', 'D', 'E']
+    return render_template('board.html', letters=letters)
 
 @views.route("/data")
 def get_data():

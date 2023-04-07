@@ -4,7 +4,42 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Scrrable Py</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='index.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
-  <body></body>
+  <body>
+    <div class="letter-block">{{ letters[1] }}</div>
+    <div class="board-slot">TL</div>
+
+    {% block content %}
+    <script>
+      $(function () {
+        $(".letter-block").draggable({
+          stop: function (event, ui) {
+            var draggable = ui.helper;
+
+            var droppable = draggable.closest(".board-slot");
+            console.log(droppable.length);
+            if (droppable.length === 0) {
+              var droppableTop = $(".board-slot").position().top - 10;
+              var droppableLeft = $(".board-slot").position().left - 9;
+              draggable.animate({ top: droppableTop, left: droppableLeft });
+            }
+          },
+        });
+        $(".board-slot").droppable();
+      });
+    </script>
+    {% endblock %}
+  </body>
 </html>

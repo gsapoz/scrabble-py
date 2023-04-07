@@ -1,0 +1,19 @@
+.letter-block {
+  border: 1px solid black;
+  background: #b8b8b8;
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  font-family: Helvetica;
+}
+
+.board-slot {
+  border: 1px solid;
+  height: 100px;
+  width: 100px;
+  background: black;
+}
