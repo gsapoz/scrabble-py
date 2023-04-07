@@ -16,22 +16,32 @@
     />
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
   </head>
   <body>
-    <div class="letter-block">{{ letters[1] }}</div>
-    <div class="board-slot">TL</div>
+    <div id="board-container"></div>
+    <div id="letter-container"></div>
 
     {% block content %}
     <script>
+      for (let x = 1; x < 122; x++) {
+        $("#board-container").append('<div class="board-slot">' + x + "</div>");
+      }
+
+      for (let i = 0; i < 7; i++) {
+        $("#letter-container").append(
+          ` <div class="letter-block">${getRandomLetter()}</div> `
+        );
+      }
+
       $(function () {
         $(".letter-block").draggable({
           stop: function (event, ui) {
             var draggable = ui.helper;
 
             var droppable = draggable.closest(".board-slot");
-            console.log(droppable.length);
             if (droppable.length === 0) {
-              var droppableTop = $(".board-slot").position().top - 10;
+              var droppableTop = $(".board-slot").position().top - 9;
               var droppableLeft = $(".board-slot").position().left - 9;
               draggable.animate({ top: droppableTop, left: droppableLeft });
             }
