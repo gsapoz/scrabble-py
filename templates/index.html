@@ -23,33 +23,7 @@
     <div id="letter-container"></div>
 
     {% block content %}
-    <script>
-      for (let x = 1; x < 122; x++) {
-        $("#board-container").append('<div class="board-slot">' + x + "</div>");
-      }
-
-      for (let i = 0; i < 7; i++) {
-        $("#letter-container").append(
-          ` <div class="letter-block">${getRandomLetter()}</div> `
-        );
-      }
-
-      $(function () {
-        $(".letter-block").draggable({
-          stop: function (event, ui) {
-            var draggable = ui.helper;
-
-            var droppable = draggable.closest(".board-slot");
-            if (droppable.length === 0) {
-              var droppableTop = $(".board-slot").position().top - 9;
-              var droppableLeft = $(".board-slot").position().left - 9;
-              draggable.animate({ top: droppableTop, left: droppableLeft });
-            }
-          },
-        });
-        $(".board-slot").droppable();
-      });
-    </script>
+    <script></script>
     {% endblock %}
   </body>
 </html>

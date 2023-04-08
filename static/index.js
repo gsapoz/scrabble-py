@@ -15,3 +15,33 @@ function getRandomVowel() {
 }
 
 function generateHand(letters) {}
+
+$(document).ready(function () {
+  for (let x = 1; x < 122; x++) {
+    $("#board-container").append(
+      '<div id="slot' + x + '" class="board-slot">' + x + "</div>"
+    );
+  }
+
+  for (let i = 0; i < 7; i++) {
+    $("#letter-container").append(
+      ` <div class="letter-block">${getRandomLetter()}</div> `
+    );
+  }
+
+  $(function () {
+    $(".letter-block").draggable({});
+
+    $(".board-slot").droppable({
+      drop: function (event, ui) {
+        let letter = ui.draggable;
+        let slot = $(this);
+
+        let y = slot.position().top;
+        let x = slot.position().left;
+        console.log(x);
+        // draggable.animate({ top: y, left: x });
+      },
+    });
+  });
+});
