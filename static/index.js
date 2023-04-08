@@ -37,10 +37,10 @@ $(document).ready(function () {
         let letter = ui.draggable;
         let slot = $(this);
 
-        let y = slot.position().top;
-        let x = slot.position().left;
-        console.log(x);
-        // draggable.animate({ top: y, left: x });
+        let y = slot.position().top + (slot.height() - letter.height()) / 2;
+        let x = slot.position().left + (slot.width() - letter.width()) / 2;
+
+        letter.animate({ top: y, left: x });
       },
     });
   });
