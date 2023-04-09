@@ -38,6 +38,37 @@
   outline: solid black;
 }
 
+#submit-button {
+  border: 1px solid black;
+  top: 1163px;
+  left: 824px;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  cursor: pointer;
+  background: #29a618;
+}
+
+#reset-button {
+  border: 1px solid black;
+  top: 1163px;
+  left: 926px;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  cursor: pointer;
+  background: #b87d07;
+}
+
+#score-board {
+  border: 1px solid black;
+  top: 1163px;
+  left: 1028px;
+  width: 100px;
+  height: 98px;
+  position: absolute;
+}
+
 .letter-block:nth-child(1) {
   left: 110px;
 }
