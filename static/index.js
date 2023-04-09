@@ -1,7 +1,8 @@
 $(document).ready(function () {
+  const active_slots = [];
   for (let x = 1; x < 122; x++) {
     $("#board-container").append(
-      '<div id="slot' + x + '" class="board-slot">' + x + "</div>"
+      '<div id="' + x + '" class="board-slot">' + x + "</div>"
     );
   }
 
@@ -11,23 +12,57 @@ $(document).ready(function () {
     if (letters[i].match(/[a-z]/i)) {
       // Ignore array symbols (commas, brackets, spaces, quotes)
       $("#letter-container").append(
-        ` <div class="letter-block">${letters[i].toUpperCase()}</div> `
+        ` <div class="letter-block" data-slot="0">${letters[
+          i
+        ].toUpperCase()}</div> `
       );
     }
   }
 
+  function active_word() {
+    let word = "";
+
+    if (active_slots.length > 0) {
+      active_slots.sort((a, b) => a - b);
+
+      for (let i = 0; i < active_slots.length; i++) {
+        let index = active_slots[i];
+        let block = document.querySelector('[data-slot="' + index + '"]');
+        let letter = block.textContent;
+        word += letter;
+      }
+    }
+
+    return word;
+  }
+
   $(function () {
-    $(".letter-block").draggable({});
+    // enable drag-and-drop animations to emulate scrabble mechanics
+    $(".letter-block").draggable({
+      start: function () {
+        let letter = $(this);
+        let slot_number = letter.attr("data-slot");
+
+        let is_assigned = active_slots.indexOf(slot_number);
+        if (is_assigned !== -1) {
+          active_slots.splice(is_assigned, 1);
+        }
+      },
+    });
 
     $(".board-slot").droppable({
       drop: function (event, ui) {
-        let letter = ui.draggable;
+        let letter = ui.draggable; //the letter-block being dropped into this slot
         let slot = $(this);
 
         let y = slot.position().top + (slot.height() - letter.height()) / 2;
         let x = slot.position().left + (slot.width() - letter.width()) / 2;
+        let slotId = slot.attr("id");
 
+        active_slots.push(slotId);
+        letter.attr("data-slot", slotId);
         letter.animate({ top: y, left: x });
+        // console.log(active_slots);
       },
     });
   });
@@ -36,15 +71,19 @@ $(document).ready(function () {
     // prevent the default "GET" request behavior
     event.preventDefault();
 
+    // assemble a word using all the active slots and submit it to the server
+    let submission = active_word();
+
     // post to our python server endpoint to validate our word and play it
     $.ajax({
       type: "POST",
       url: "/submit-word",
       data: {
-        word: "Phenomenal",
+        word: submission,
       },
       success: function (response) {
         if (typeof response.message === "boolean" && response.message) {
+          alert(response.message);
         } else {
           alert(response.message);
         }
