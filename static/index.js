@@ -135,6 +135,13 @@ $(document).ready(function () {
     },
   });
 
+  $("body").droppable({
+    drop: function (event, ui) {
+      let letter = ui.draggable; //the letter-block dropped back into its default
+      reset_letter(letter);
+    },
+  });
+
   $("#reset-button").click(function () {
     event.preventDefault();
 
