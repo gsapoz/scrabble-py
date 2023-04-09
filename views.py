@@ -46,13 +46,33 @@ def generate_letters():
     
     return letters
 
+
+def validate_word(word):
+    # Load dictionary file
+    # Credit: https://github.com/dwyl/english-words for dictionary
+    with open('assets/words_alpha.txt', 'r') as f:
+        dictionary = set([word.strip() for word in f.readlines()])
+
+    # Check if string is in dictionary, then reformat and return it
+    if word.lower() in dictionary:
+        return True
+    else:
+        return '"%s" is not a valid word.' % word.lower().capitalize()
+        
 @views.route("/")
 def home():
     letters = generate_letters()
     return render_template('index.html', letters=letters, name="Scrabble!")
 
 
-@views.route("/data")
-def get_data():
-    data = request.json
-    return jsonify(data)
+
+@views.route("/submit-word", methods=["POST"])
+def my_endpoint():
+    # handle the request data
+    word = request.form.get("word")
+    
+    # validate the word given to the server
+    result = validate_word(word)
+    
+    # return a JSON response
+    return jsonify(message=result)

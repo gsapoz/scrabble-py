@@ -31,4 +31,28 @@ $(document).ready(function () {
       },
     });
   });
+
+  $("#submit-button").click(function () {
+    // prevent the default "GET" request behavior
+    event.preventDefault();
+
+    // post to our python server endpoint to validate our word and play it
+    $.ajax({
+      type: "POST",
+      url: "/submit-word",
+      data: {
+        word: "Phenomenal",
+      },
+      success: function (response) {
+        if (typeof response.message === "boolean" && response.message) {
+        } else {
+          alert(response.message);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        // handle errors
+        console.error(textStatus, errorThrown);
+      },
+    });
+  });
 });
