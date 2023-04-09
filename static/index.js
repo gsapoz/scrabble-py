@@ -19,17 +19,39 @@ $(document).ready(function () {
     }
   }
 
+  function hor_adjacent(slots) {
+    // checks if all the letter blocks are horizontally adjacent
+    for (let i = 1; i < slots.length; i++) {
+      if (Math.abs(slots[i] - slots[i - 1]) > 1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function ver_adjacent(slots) {
+    // checks if all the letter blocks are vertically adjacent
+    for (let i = 1; i < slots.length; i++) {
+      if (Math.abs(slots[i] - slots[i - 1]) > 11) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   function active_word() {
     let word = "";
 
     if (active_slots.length > 0) {
-      active_slots.sort((a, b) => a - b);
+      if (hor_adjacent(active_slots) || ver_adjacent(active_slots)) {
+        active_slots.sort((a, b) => a - b);
 
-      for (let i = 0; i < active_slots.length; i++) {
-        let index = active_slots[i];
-        let block = document.querySelector('[data-slot="' + index + '"]');
-        let letter = block.textContent;
-        word += letter;
+        for (let i = 0; i < active_slots.length; i++) {
+          let index = active_slots[i];
+          let block = document.querySelector('[data-slot="' + index + '"]');
+          let letter = block.textContent;
+          word += letter;
+        }
       }
     }
 
