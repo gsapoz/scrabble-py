@@ -1,6 +1,6 @@
 $(document).ready(function () {
   const x_defaults = ["8", "110", "212", "314", "416", "518", "620"];
-  const default_y = "1163";
+  const default_y = "1163px";
   const active_slots = [];
 
   for (let x = 1; x < 122; x++) {
@@ -73,19 +73,27 @@ $(document).ready(function () {
       }
     }
 
+    // edit active_slots as well just in case it doesn't reset
+    let slot_number = letter.attr("data-slot");
+    let is_assigned = active_slots.indexOf(slot_number);
+    if (is_assigned !== -1) {
+      active_slots.splice(is_assigned, 1);
+    }
+    letter.attr("data-slot", "0");
     letter.animate({ top: default_y, left: nearest });
   }
 
   function reset_board() {
-    if (active_slots.length > 0) {
-      for (let i = 0; i < active_slots.length; i++) {
-        let index = active_slots[i];
-        let letter = document.querySelector('[data-slot="' + index + '"]');
-        console.log(default_y);
-        letter.style.top = default_y;
-        // letter.animate({ top: default_y, left: x_defaults[i] });
-      }
-    }
+    const letter_blocks = document.querySelectorAll(
+      ".letter-block.ui-draggable.ui-draggable-handle"
+    );
+
+    let index = 0;
+    letter_blocks.forEach((letter) => {
+      letter.style.top = default_y;
+      letter.style.left = x_defaults[index] + "px";
+      index++;
+    });
   }
 
   $(function () {
