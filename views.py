@@ -1,17 +1,56 @@
 from flask import Blueprint, render_template, request, jsonify
+import random
 
 views = Blueprint(__name__, "views")
 
+vowels = ['a', 'e', 'i', 'o', 'u']
+
+ # Define the letters with their corresponding values
+letter_values = {
+    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4,
+    'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3,
+    'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8,
+    'y': 4, 'z': 10
+}
+
+# Define the weights of the high-value letters
+    # The weights determine how often the letter will appear
+letter_weights = {
+    'j': 0.1, 'q': 0.1, 'x': 0.2, 'z': 0.2
+}
+
+def generate_letters():
+    letters = []
+    vowel_count = 0
+   
+    for i in range(7):
+        if i < 4 or vowel_count < 2:
+            # Generate a random letter
+            letter = chr(random.randint(ord('a'), ord('z')))
+            
+            # Check if it's a vowel
+            if letter in vowels:
+                vowel_count += 1
+        else:
+            # Generate a random consonant
+            # Use letter_weights to determine the probability of selecting a high-value letter
+            if random.random() < sum(letter_weights.values()):
+                letter = random.choices(list(letter_weights.keys()), weights=list(letter_weights.values()))[0]
+            else:
+                letter = chr(random.randint(ord('b'), ord('y')))
+            
+        letters.append(letter)
+    
+    # Shuffle the letters to make the distribution more random
+    random.shuffle(letters)
+    
+    return letters
 
 @views.route("/")
 def home():
-    letters = ['A', 'B', 'C', 'D', 'E']
+    letters = generate_letters()
     return render_template('index.html', letters=letters, name="Scrabble!")
 
-@views.route('/board')
-def board():
-    letters = ['A', 'B', 'C', 'D', 'E']
-    return render_template('board.html', letters=letters)
 
 @views.route("/data")
 def get_data():
