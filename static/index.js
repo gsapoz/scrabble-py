@@ -1,5 +1,8 @@
 $(document).ready(function () {
+  const x_defaults = ["8", "110", "212", "314", "416", "518", "620"];
+  const default_y = "1163";
   const active_slots = [];
+
   for (let x = 1; x < 122; x++) {
     $("#board-container").append(
       '<div id="' + x + '" class="board-slot">' + x + "</div>"
@@ -11,11 +14,8 @@ $(document).ready(function () {
   for (let i = 0; i < letters.length; i++) {
     if (letters[i].match(/[a-z]/i)) {
       // Ignore array symbols (commas, brackets, spaces, quotes)
-      $("#letter-container").append(
-        ` <div class="letter-block" data-slot="0">${letters[
-          i
-        ].toUpperCase()}</div> `
-      );
+      $("#letter-container").append(` <div class="letter-block" data-slot="0">
+        ${letters[i].toUpperCase()}</div> `);
     }
   }
 
@@ -58,6 +58,36 @@ $(document).ready(function () {
     return word;
   }
 
+  function reset_letter(letter) {
+    let nearest = null;
+    let minDistance = Infinity;
+
+    let x = letter.position().left + (letter.width() - letter.width()) / 2;
+
+    for (let i = 0; i < x_defaults.length; i++) {
+      const distance = Math.abs(x - x_defaults[i]);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearest = x_defaults[i];
+      }
+    }
+
+    letter.animate({ top: default_y, left: nearest });
+  }
+
+  function reset_board() {
+    if (active_slots.length > 0) {
+      for (let i = 0; i < active_slots.length; i++) {
+        let index = active_slots[i];
+        let letter = document.querySelector('[data-slot="' + index + '"]');
+        console.log(default_y);
+        letter.style.top = default_y;
+        // letter.animate({ top: default_y, left: x_defaults[i] });
+      }
+    }
+  }
+
   $(function () {
     // enable drag-and-drop animations to emulate scrabble mechanics
     $(".letter-block").draggable({
@@ -89,6 +119,20 @@ $(document).ready(function () {
     });
   });
 
+  $("#letter-container").droppable({
+    drop: function (event, ui) {
+      let letter = ui.draggable; //the letter-block dropped back into its default
+
+      reset_letter(letter);
+    },
+  });
+
+  $("#reset-button").click(function () {
+    event.preventDefault();
+
+    reset_board();
+  });
+
   $("#submit-button").click(function () {
     // prevent the default "GET" request behavior
     event.preventDefault();
@@ -105,7 +149,7 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (typeof response.message === "boolean" && response.message) {
-          alert(response.message);
+          alert(submission);
         } else {
           alert(response.message);
         }
