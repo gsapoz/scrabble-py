@@ -137,14 +137,16 @@ $(document).ready(function () {
 
   $("body").droppable({
     drop: function (event, ui) {
-      let letter = ui.draggable; //the letter-block dropped back into its default
-      reset_letter(letter);
+      let letter = ui.draggable; //the letter-block dropped out of bounds
+      let y = letter.position().top;
+      if (y > 1090) {
+        reset_letter(letter);
+      }
     },
   });
 
   $("#reset-button").click(function () {
     event.preventDefault();
-
     reset_board();
   });
 
