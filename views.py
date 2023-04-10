@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-import random
+import random, json
 
 views = Blueprint(__name__, "views")
 
@@ -26,7 +26,7 @@ def generate_letters():
     vowel_count = 0
    
     for i in range(7):
-        if i < 4 or vowel_count < 2:
+        if i < 2 or vowel_count < 2:
             # Generate a random letter
             letter = chr(random.randint(ord('a'), ord('z')))
             
@@ -48,6 +48,12 @@ def generate_letters():
     
     return letters
 
+def refresh_letters(word, hand):
+    # Iterate through each active letter, replace them with a new letter
+    for letter in word.lower():
+        newletter = chr(random.randint(ord('a'), ord('z')))
+        hand = hand.replace(letter, newletter, 1)
+    return hand
 
 def validate_word(word):
     # Load dictionary file
@@ -61,6 +67,17 @@ def validate_word(word):
     else:
         return '"%s" is not a valid word.' % word.lower().capitalize()
         
+def register_slots(slots, word):
+    #returns an array that maps active letters to their slots to fill board
+    return []
+
+def calculate_score(word):
+    score = 0
+    for letter in word.lower():
+        if letter in letter_values:
+            score += letter_values[letter]
+    return score
+
 @views.route("/")
 def home():
     letters = generate_letters()
@@ -72,10 +89,18 @@ def home():
 @views.route("/submit-word", methods=["POST"])
 def play_word():
     # handle the request data
-    word = request.form.get("word")
+    word = request.json.get("word")
+    slots = request.json.get("slots")
+    oldletters = request.json.get("old_letters")
+
+    #regenerate more letters for empty slots
+    letters = refresh_letters(word, oldletters)
     
     # validate the word given to the server
     result = validate_word(word)
     
+    # calculate the total value of the word
+    score = calculate_score(word)
+
     # return a JSON response
-    return jsonify(message=result)
+    return jsonify(message=result, score=score, letters=letters)

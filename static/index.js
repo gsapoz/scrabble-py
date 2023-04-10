@@ -9,6 +9,7 @@ $(document).ready(function () {
     );
   }
 
+  // init (we should put this in function logic and insert session variable on load)
   let letters = $("#letter-container").data("letters");
 
   for (let i = 0; i < letters.length; i++) {
@@ -161,12 +162,19 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "/submit-word",
-      data: {
+      data: JSON.stringify({
         word: submission,
-      },
+        slots: active_slots,
+        old_letters: letters,
+      }),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
       success: function (response) {
         if (typeof response.message === "boolean" && response.message) {
-          alert(submission);
+          document.getElementById("score-board").innerText = response.score;
+          letters = response.letters;
+          // now we need to change the data-letters attribute on the text-container, this doesn't do that
+          // create a function that generates the letter blocks, run it when saved_words (Array) is empty
         } else {
           alert(response.message);
         }
@@ -178,3 +186,8 @@ $(document).ready(function () {
     });
   });
 });
+
+// Refresh letters in letter container so it equal to 7
+// Save the word, positions, and score to python session variable
+// Append the score of this word to the score board
+// Have the CPU play a word that works, using python
