@@ -49,7 +49,7 @@ $(document).ready(function () {
         for (let i = 0; i < active_slots.length; i++) {
           let index = active_slots[i];
           let block = document.querySelector('[data-slot="' + index + '"]');
-          let letter = block.textContent;
+          let letter = block.textContent.trim();
           word += letter;
         }
       }

@@ -3,6 +3,8 @@ import random
 
 views = Blueprint(__name__, "views")
 
+the_score = 0
+
 vowels = ['a', 'e', 'i', 'o', 'u']
 
  # Define the letters with their corresponding values
@@ -14,7 +16,7 @@ letter_values = {
 }
 
 # Define the weights of the high-value letters
-    # The weights determine how often the letter will appear
+# The weights determine how often the letter will appear
 letter_weights = {
     'j': 0.1, 'q': 0.1, 'x': 0.2, 'z': 0.2
 }
@@ -62,12 +64,13 @@ def validate_word(word):
 @views.route("/")
 def home():
     letters = generate_letters()
-    return render_template('index.html', letters=letters, name="Scrabble!")
+    
+    return render_template('index.html', letters=letters, score=the_score, name="Scrabble!")
 
 
 
 @views.route("/submit-word", methods=["POST"])
-def my_endpoint():
+def play_word():
     # handle the request data
     word = request.form.get("word")
     
