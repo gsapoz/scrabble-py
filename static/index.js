@@ -1,22 +1,33 @@
 $(document).ready(function () {
+  let letters = $("#letter-container").data("letters");
   const x_defaults = ["8", "110", "212", "314", "416", "518", "620"];
   const default_y = "1163px";
   const active_slots = [];
 
-  for (let x = 1; x < 122; x++) {
-    $("#board-container").append(
-      '<div id="' + x + '" class="board-slot">' + x + "</div>"
-    );
+  draw_board();
+  draw_hand();
+  get_score();
+
+  // ui constructors
+  function draw_board() {
+    for (let x = 1; x < 122; x++) {
+      $("#board-container").append(
+        '<div id="' + x + '" class="board-slot">' + x + "</div>"
+      );
+    }
   }
 
-  // init (we should put this in function logic and insert session variable on load)
-  let letters = $("#letter-container").data("letters");
+  function get_score() {
+    //Send POST request to get the active score from the corresponding session variable
+  }
 
-  for (let i = 0; i < letters.length; i++) {
-    if (letters[i].match(/[a-z]/i)) {
-      // Ignore array symbols (commas, brackets, spaces, quotes)
-      $("#letter-container").append(` <div class="letter-block" data-slot="0">
+  function draw_hand() {
+    for (let i = 0; i < letters.length; i++) {
+      if (letters[i].match(/[a-z]/i)) {
+        // Ignore array symbols (commas, brackets, spaces, quotes)
+        $("#letter-container").append(` <div class="letter-block" data-slot="0">
         ${letters[i].toUpperCase()}</div> `);
+      }
     }
   }
 

@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, session
 import random, json
 
 views = Blueprint(__name__, "views")
 
 the_score = 0
+
+board_data = []
+hand_data = []
 
 vowels = ['a', 'e', 'i', 'o', 'u']
 
@@ -84,7 +87,13 @@ def home():
     
     return render_template('index.html', letters=letters, score=the_score, name="Scrabble!")
 
+@views.route("/populate_board", methods=["POST"])
+def populate_board():
+    print("populate_board")
 
+@views.route("/populate_hand", methods=["POST"])
+def populate_hand():
+    print("populate_hand")
 
 @views.route("/submit-word", methods=["POST"])
 def play_word():
